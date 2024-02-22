@@ -1,6 +1,7 @@
 package com.cloudbees.service.impl;
 
 import com.cloudbees.datahelper.Storage;
+import com.cloudbees.enums.ReceiptStatus;
 import com.cloudbees.model.Receipt;
 import com.cloudbees.service.ReceiptService;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public Optional<Receipt> getReceiptByUserId(String userId) {
-        return Storage.receipts.values().stream().filter(key -> key.getUser().getId().equals(userId)).findAny();
+        return Storage.receipts.values().stream().
+                filter(key -> key.getUser().getId().equals(userId) && key.getStatus().equals(ReceiptStatus.SUCCESS)).findAny();
     }
 }

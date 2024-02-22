@@ -59,8 +59,11 @@ public class MainController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/{id}")
-    public void deleteUser(@PathVariable String id) {
+    public void deleteUser(@PathVariable String id) throws ValidationException {
         User user = usersService.getUserById(id);
+        if (user == null) {
+            throw new ValidationException("Couldn't find user by Id:" + id);
+        }
         usersService.deleteUser(id);
         receiptService.getReceiptByUserId(id).get().setStatus(ReceiptStatus.CANCELLED);
         seatAllocationService.unReserveSeat(user.getSeat().getSeatNumber(), user.getSeat().getSection());
