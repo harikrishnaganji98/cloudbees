@@ -1,6 +1,7 @@
 package com.cloudbees.controller;
 
 
+import com.cloudbees.enums.ReceiptStatus;
 import com.cloudbees.enums.Section;
 import com.cloudbees.exceptions.ValidationException;
 import com.cloudbees.model.Receipt;
@@ -61,6 +62,7 @@ public class MainController {
     public void deleteUser(@PathVariable String id) {
         User user = usersService.getUserById(id);
         usersService.deleteUser(id);
+        receiptService.getReceiptByUserId(id).get().setStatus(ReceiptStatus.CANCELLED);
         seatAllocationService.unReserveSeat(user.getSeat().getSeatNumber(), user.getSeat().getSection());
     }
 
@@ -76,11 +78,14 @@ public class MainController {
         if (seat == null) {
             throw new ValidationException("Seat information shouldn't be empty");
         }
+        seat = seatAllocationService.getSeatBySectionAndID(seat.getSection(), seat.getSeatNumber());
         if (!seatAllocationService.isSeatValid(payLoad.getSeat().getSection(), payLoad.getSeat().getSeatNumber())) {
             throw new ValidationException("Seat is Reserved");
         }
+        Receipt oldReceipt = receiptService.getReceiptByUserId(id).get();
+        oldReceipt.setStatus(ReceiptStatus.CANCELLED);
         seatAllocationService.unReserveSeat(oldSeat.getSeatNumber(), oldSeat.getSection());
-        return Map.of("receiptId", seatAllocationService.allocateSeat(payLoad));
+        return Map.of("receiptId", seatAllocationService.updateSeat(user, seat, payLoad));
     }
 
     private List<SeatDataBySectionDto> convertToSeatAllocationDto(List<Seat> allSeatsBySection) {
@@ -104,6 +109,8 @@ public class MainController {
         dto.setEmail(receipt.getUser().getEmail());
         dto.setPricePaid(receipt.getPricePaid());
         dto.setSection(receipt.getSeat().getSection());
+        dto.setUserId(receipt.getUser().getId());
+        dto.setReceiptStatus(receipt.getStatus());
         return dto;
     }
 

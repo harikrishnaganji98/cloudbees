@@ -1,6 +1,7 @@
 package com.cloudbees.service.impl;
 
 import com.cloudbees.datahelper.DataInitializer;
+import com.cloudbees.enums.ReceiptStatus;
 import com.cloudbees.enums.SeatStatus;
 import com.cloudbees.enums.Section;
 import com.cloudbees.exceptions.ValidationException;
@@ -48,7 +49,22 @@ public class SeatAllocationServiceImpl implements SeatAllocationService {
         receipt.setId(receiptId);
         receipt.setSeat(seat);
         receipt.setUser(user);
+        receipt.setStatus(ReceiptStatus.SUCCESS);
         receiptService.saveReceipt(receipt);
+        return receiptId;
+    }
+
+    @Override
+    public String updateSeat(User user, Seat seat, Receipt receipt) {
+        user.setSeat(seat);
+        seat.setSeatStatus(SeatStatus.RESERVED);
+        String receiptId = String.valueOf(UUID.randomUUID());
+        receipt.setId(receiptId);
+        receipt.setSeat(seat);
+        receipt.setUser(user);
+        receipt.setStatus(ReceiptStatus.SUCCESS);
+        receiptService.saveReceipt(receipt);
+        seat.setUser(user);
         return receiptId;
     }
 

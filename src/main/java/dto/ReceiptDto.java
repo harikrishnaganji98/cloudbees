@@ -1,11 +1,13 @@
 package dto;
 
+import com.cloudbees.enums.ReceiptStatus;
 import com.cloudbees.enums.SeatStatus;
 import com.cloudbees.enums.Section;
 
 public class ReceiptDto {
 
     private String id;
+    private String userId;
     private String from;
     private String to;
     private double pricePaid;
@@ -15,6 +17,15 @@ public class ReceiptDto {
     private String firstName;
     private String lastName;
     private String email;
+    private ReceiptStatus receiptStatus;
+
+    public ReceiptStatus getReceiptStatus() {
+        return receiptStatus;
+    }
+
+    public void setReceiptStatus(ReceiptStatus receiptStatus) {
+        this.receiptStatus = receiptStatus;
+    }
 
     public String getId() {
         return id;
@@ -22,6 +33,14 @@ public class ReceiptDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getFrom() {

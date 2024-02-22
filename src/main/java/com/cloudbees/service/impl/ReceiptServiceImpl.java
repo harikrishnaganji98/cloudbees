@@ -5,6 +5,8 @@ import com.cloudbees.model.Receipt;
 import com.cloudbees.service.ReceiptService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ReceiptServiceImpl implements ReceiptService {
 
@@ -18,4 +20,8 @@ public class ReceiptServiceImpl implements ReceiptService {
         Storage.receipts.put(receipt.getId(), receipt);
     }
 
+    @Override
+    public Optional<Receipt> getReceiptByUserId(String userId) {
+        return Storage.receipts.values().stream().filter(key -> key.getUser().getId().equals(userId)).findAny();
+    }
 }

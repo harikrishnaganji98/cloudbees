@@ -1,5 +1,7 @@
 package com.cloudbees.model;
 
+import com.cloudbees.enums.ReceiptStatus;
+
 public class Receipt {
 
     private String id;
@@ -8,6 +10,7 @@ public class Receipt {
     private User user;
     private Seat seat;
     private double pricePaid;
+    private ReceiptStatus status;
 
     public String getId() {
         return id;
@@ -55,5 +58,13 @@ public class Receipt {
 
     public void setPricePaid(double pricePaid) {
         this.pricePaid = pricePaid;
+    }
+
+    public ReceiptStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReceiptStatus status) {
+        this.status = status;
     }
 }
